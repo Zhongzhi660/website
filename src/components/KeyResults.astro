@@ -1,0 +1,65 @@
+---
+interface Item {
+  label: string;
+  value: string;
+  desc?: string;
+}
+const { items = [] }: { items: Item[] } = Astro.props;
+---
+
+<div class="key-results">
+  {items.map((item) => (
+    <div class="key-result-card">
+      <div class="key-result-value">{item.value}</div>
+      <div class="key-result-label">{item.label}</div>
+      {item.desc && <div class="key-result-desc">{item.desc}</div>}
+    </div>
+  ))}
+</div>
+
+<style>
+.key-results {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1.25rem;
+  margin: 2rem 0;
+}
+
+.key-result-card {
+  text-align: center;
+  padding: 1.5rem 1rem;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.key-result-value {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #2563eb;
+  line-height: 1.2;
+  margin-bottom: 0.35rem;
+}
+
+.key-result-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.key-result-desc {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-top: 0.25rem;
+}
+
+@media (max-width: 640px) {
+  .key-results {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+  .key-result-value {
+    font-size: 1.5rem;
+  }
+}
+</style>

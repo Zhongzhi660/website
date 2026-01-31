@@ -1,0 +1,25 @@
+---
+import "../styles/global.css";
+const { lang = "en" } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Less is Enough</title>
+
+    <link rel="icon" href="/favicon.svg" />
+  </head>
+
+  <body>
+    <slot />
+  </body>
+</html>
+
+<style>
+body {
+  margin: 0;
+}
+</style>

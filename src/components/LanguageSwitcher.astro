@@ -1,0 +1,49 @@
+---
+const pathname = Astro.url.pathname;
+const isZh = pathname.startsWith("/zh");
+const { inline = false } = Astro.props;
+---
+
+<div class={`lang-switcher ${inline ? "lang-switcher-inline" : "lang-switcher-fixed"}`}>
+  <a href="/" class={!isZh ? "active" : ""}>EN</a>
+  <span class="sep">|</span>
+  <a href="/zh/" class={isZh ? "active" : ""}>中文</a>
+</div>
+
+<style>
+.lang-switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  width: auto;
+  height: auto;
+  background: transparent;
+  pointer-events: auto;
+}
+
+.lang-switcher-fixed {
+  position: fixed;
+  top: 1.2rem;
+  right: 1.5rem;
+  z-index: 999;
+}
+
+.lang-switcher-inline {
+  position: static;
+  flex-shrink: 0;
+}
+
+.lang-switcher a {
+  text-decoration: none;
+  color: #555;
+  font-weight: 600;
+}
+
+.lang-switcher a.active {
+  color: #2563eb;
+}
+
+.sep {
+  color: #aaa;
+}
+</style>

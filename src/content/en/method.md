@@ -1,0 +1,3 @@
+- **Step 1 — SAE feature extraction:** Use a sparse autoencoder to get interpretable, task-relevant features from both anchor data and the current available data.
+- **Step 2 — Identify missing features:** Compare which features are covered by the anchor set vs. current available data; the gap is **F<sub>miss</sub>** (features the task needs but current dataset has not yet covered).
+- **Step 3 — Coverage-guided synthesis:** For each feature in F<sub>miss</sub>, guide the generator and filter by SAE activation so the final set covers task-relevant features with fewer and diverse samples.

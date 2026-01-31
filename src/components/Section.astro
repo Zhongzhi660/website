@@ -1,0 +1,130 @@
+---
+const {
+  title,
+  id,
+  variant = "default",
+  wide = false,
+} = Astro.props;
+---
+
+<section
+  id={id}
+  class={`paper-section paper-section-${variant} ${wide ? "paper-section-wide" : ""}`}
+>
+  <div class="paper-section-inner">
+
+    {title && (
+      <h2 class="paper-section-title">
+        {title}
+      </h2>
+    )}
+
+    <div class="paper-section-content">
+      <slot />
+    </div>
+
+  </div>
+</section>
+
+<style>
+.paper-section {
+  position: relative;
+  z-index: 1;
+
+  isolation: isolate;
+  overflow: hidden;
+
+  padding: 4rem 1.5rem 3.5rem;
+}
+
+.paper-section-inner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.paper-section-wide .paper-section-inner {
+  max-width: 1100px;
+}
+
+.paper-section-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1.6rem;
+  letter-spacing: -0.01em;
+}
+
+.paper-section-content {
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: #444;
+  text-align: justify;
+}
+
+.paper-section-content p {
+  margin-bottom: 1.1rem;
+  text-align: justify;
+}
+
+.paper-section-content strong {
+  font-weight: 600;
+}
+
+.paper-section-content img {
+  display: block;
+  max-width: 100%;
+  margin: 2rem auto;
+}
+
+.paper-section-content ul,
+.paper-section-content ol {
+  padding-left: 1.3rem;
+  margin-bottom: 1.2rem;
+}
+
+.paper-section-content li {
+  margin-bottom: 0.45rem;
+}
+
+.paper-section-content pre {
+  background: #f6f8fa;
+  padding: 1rem;
+  overflow-x: auto;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.paper-section-default {
+  background: #ffffff;
+}
+
+.paper-section-alt {
+  background: #f8f9fb;
+}
+
+.paper-section-dark {
+  background: #0f172a;
+  color: #e5e7eb;
+}
+
+.paper-section-dark .paper-section-title {
+  color: #ffffff;
+}
+
+.paper-section-dark .paper-section-content {
+  color: #d1d5db;
+}
+
+.paper-section-dark a {
+  color: #93c5fd;
+}
+
+@media (max-width: 640px) {
+  .paper-section {
+    padding: 3rem 1.2rem;
+  }
+
+  .paper-section-title {
+    font-size: 1.6rem;
+  }
+}
+</style>

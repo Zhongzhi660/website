@@ -1,0 +1,123 @@
+---
+const {
+  title,
+  subtitle,
+  paragraphs = [],
+  paperUrl,
+  codeUrl,
+  datasetUrl,
+  demoUrl
+} = Astro.props;
+---
+
+<section class="hero">
+  <div class="hero-inner">
+
+    <h1 class="hero-title">{title}</h1>
+
+    <h2 class="hero-subtitle">{subtitle}</h2>
+
+    <div class="hero-abstract">
+      {paragraphs.map(p => <p>{p}</p>)}
+    </div>
+
+    <div class="hero-buttons">
+      <a href={paperUrl} target="_blank" class="btn">📄 Paper</a>
+      <a href={codeUrl} target="_blank" class="btn">💻 Code</a>
+      <a href={datasetUrl} target="_blank" class="btn">📦 Dataset</a>
+      <a href={demoUrl} target="_blank" class="btn btn-primary">🚀 Demo</a>
+    </div>
+
+  </div>
+</section>
+
+<style>
+.hero {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  box-sizing: border-box;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(180deg,#fafafa,#ffffff);
+}
+
+.hero-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.hero-title {
+  font-size: 4rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-top: 0;
+  margin-bottom: 0.5em;
+  letter-spacing: -0.02em;
+}
+
+.hero-subtitle {
+  font-size: 1.7rem;
+  margin-bottom: 2.25rem;
+  color: #444;
+}
+
+.hero-abstract p {
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: #555;
+  margin-bottom: 1.2rem;
+}
+
+.hero-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: white;
+  font-weight: 600;
+  text-decoration: none;
+  color: #222;
+}
+
+.btn-primary {
+  background: #2563eb;
+  color: white;
+  border-color: #2563eb;
+}
+
+@media (max-height: 720px) {
+  .hero {
+    padding: 2.5rem 1.5rem;
+  }
+  .hero-title {
+    font-size: 2.6rem;
+  }
+  .hero-subtitle {
+    font-size: 1.35rem;
+    margin-bottom: 1.2rem;
+  }
+  .hero-abstract p {
+    font-size: 0.95rem;
+    margin-bottom: 0.6rem;
+  }
+  .hero-buttons {
+    gap: 0.5rem;
+  }
+  .btn {
+    padding: 0.45rem 0.9rem;
+    font-size: 0.9rem;
+  }
+}
+</style>

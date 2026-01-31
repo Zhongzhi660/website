@@ -1,0 +1,79 @@
+---
+interface SingleFig {
+  src: string;
+  caption?: string;
+}
+const {
+  src,
+  caption,
+  figures,
+  wide = false,
+}: {
+  src?: string;
+  caption?: string;
+  figures?: SingleFig[];
+  wide?: boolean;
+} = Astro.props;
+const list = figures ?? (src ? [{ src, caption }] : []);
+---
+
+<figure class={`figure-wrap ${wide ? "figure-wrap--wide" : ""}`}>
+  {list.length === 1 ? (
+    <div class="figure-single">
+      <img src={list[0].src} alt={list[0].caption ?? ""} loading="lazy" />
+      {list[0].caption && <figcaption>{list[0].caption}</figcaption>}
+    </div>
+  ) : (
+    <div class="figure-grid">
+      {list.map((fig) => (
+        <div class="figure-item">
+          <img src={fig.src} alt={fig.caption ?? ""} loading="lazy" />
+          {fig.caption && <figcaption>{fig.caption}</figcaption>}
+        </div>
+      ))}
+    </div>
+  )}
+</figure>
+
+<style>
+.figure-wrap {
+  margin: 2rem 0;
+}
+
+.figure-wrap--wide {
+  max-width: 100%;
+  margin-left: calc(-1 * (100vw - 100%) / 2);
+  margin-right: calc(-1 * (100vw - 100%) / 2);
+  padding: 0 1.5rem;
+}
+
+.figure-single img,
+.figure-item img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.figure-single figcaption,
+.figure-item figcaption {
+  margin-top: 0.6rem;
+  font-size: 0.9rem;
+  color: #64748b;
+  text-align: center;
+}
+
+.figure-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.paper-section-dark .figure-single figcaption,
+.paper-section-dark .figure-item figcaption {
+  color: #94a3b8;
+}
+</style>

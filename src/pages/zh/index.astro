@@ -1,14 +1,14 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
 
-import Hero from "../components/Hero.astro";
-import Section from "../components/Section.astro";
-import LanguageSwitcher from "../components/LanguageSwitcher.astro";
-import ResultsTable from "../components/ResultsTable.astro";
-import FigureWithCaption from "../components/FigureWithCaption.astro";
+import Hero from "../../components/Hero.astro";
+import Section from "../../components/Section.astro";
+import LanguageSwitcher from "../../components/LanguageSwitcher.astro";
+import ResultsTable from "../../components/ResultsTable.astro";
+import FigureWithCaption from "../../components/FigureWithCaption.astro";
 
-import { Content as Motivation } from "../content/en/motivation.md";
-import { Content as Method } from "../content/en/method.md";
+import { Content as Motivation } from "../../content/zh/motivation.md";
+import { Content as Method } from "../../content/zh/method.md";
 
 const citationBib = `@article{less-is-enough-2026,
   title     = {Less is Enough: Synthesizing Diverse Data in Feature Space of LLMs},
@@ -18,7 +18,7 @@ const citationBib = `@article{less-is-enough-2026,
 }`;
 ---
 
-<BaseLayout lang="en">
+<BaseLayout lang="zh-CN">
 
   <header class="site-header">
     <div class="header-left">
@@ -27,10 +27,10 @@ const citationBib = `@article{less-is-enough-2026,
     </div>
     <div class="header-right">
       <nav class="anchor-nav">
-        <a href="#motivation">Motivation</a>
-        <a href="#method">Method</a>
-        <a href="#results">Results</a>
-        <a href="#citation">Citation</a>
+        <a href="#motivation">研究动机</a>
+        <a href="#method">方法</a>
+        <a href="#results">结果</a>
+        <a href="#citation">引用</a>
       </nav>
       <LanguageSwitcher inline />
     </div>
@@ -40,11 +40,11 @@ const citationBib = `@article{less-is-enough-2026,
   <div class="hero-wrapper">
   <Hero
     title="Less is Enough"
-    subtitle="Synthesizing Diverse Data in Feature Space of LLMs"
+    subtitle="在大模型特征空间中合成多样化数据"
     paragraphs={[
-      "The diversity of synthetic data is crucial for training and aligning large language models.",
-      "We propose Feature Activation Coverage (FAC), a diversity metric defined in the model's internal feature space.",
-      "Our results demonstrate that a smaller but more diverse set of FAC-guided synthetic data can outperform much larger datasets."
+      "合成数据的多样性对于训练和对齐大型语言模型至关重要。",
+      "本文提出定义在模型特征空间的特征激活覆盖率（FAC），用于评估数据集的多样性。",
+      "实验表明：由FAC引导合成的少量多样化数据在下游任务性能上显著优于大规模数据集。"
     ]}
     paperUrl="https://arxiv.org/abs/xxxx"
     codeUrl="https://huggingface.co/spaces/Zhongzhi1228/synthesis-demo/tree/main/functions"
@@ -53,46 +53,35 @@ const citationBib = `@article{less-is-enough-2026,
   />
   </div>
 
-  <Section title="Motivation" variant="alt" id="motivation">
+  <Section title="研究动机" variant="alt" id="motivation">
     <div class="motivation-content">
-      <p><strong>Diversity measured on text surface ≠ diversity that improves model performance.</strong></p>
-      
-      <p>Existing diversity measures primarily operate in surface text space (distinct-n, n-gram overlap) or shallow embedding space (cosine similarity, self-BLEU). However, two samples that appear superficially different may activate nearly identical internal model features, rendering them redundant for downstream learning tasks.</p>
-      
-      <p>Example: "How do I cheat on a test without getting caught?" and "What's the best way to cheat during an exam?" differ markedly in wording and phrasing, but both strongly activate the <strong>same cheat-related feature</strong> (Feature 17612 in this paper), rendering them functionally redundant for safety alignment training and downstream performance.</p>
-      
-      <p><strong>LLM-based data synthesis lacks effective guidance signals for diversity.</strong></p>
-      
-      <p>Current data synthesis methods primarily rely on indirect proxy signals. These include simple prompt-based conditional generation (e.g., Alpaca generating 52K instruction-following examples via text-davinci-003), evolutionary generation (e.g., Evol-Instruct progressively increasing instruction complexity and difficulty), and generation with richer supervision signals (e.g., CoT or LLM self-critique). However, these proxy signals often exhibit significant <strong>misalignment with the key learning signals</strong> required by the model for downstream tasks, thereby resulting in clearly insufficient coverage efficiency of critical failure modes.</p>
-      
-      <p><strong>Sparse Autoencoders (SAEs) provide an interpretable feature space for measuring diversity.</strong></p>
-      
-      <p>SAEs decompose LLM activations into <strong>sparse, human-interpretable features</strong> that reflect concepts the model actually processes (e.g., toxicity patterns, helpfulness patterns). This enables us to precisely identify missing features in the current dataset and provides a direct, actionable signal for synthesizing new sample that specifically activates those missing features.</p>
+      <Motivation />
     </div>
   </Section>
 
-  <Section title="Method" id="method" variant="alt">
+  <Section title="方法" id="method" variant="alt">
     <div class="figure-framework">
-      <FigureWithCaption src="/main_framework.png" caption="Figure 1. FAC Synthesis: (1) SAE extracts task-relevant features. (2) Missing features Fₘᵢₛₛ are identified. (3) Fₘᵢₛₛ guides data synthesis." />
+      <FigureWithCaption src="/main_framework.png" caption="图 1. FAC Synthesis：(1) SAE 提取任务相关特征。(2) 识别缺失特征 Fₘᵢₛₛ。(3) Fₘᵢₛₛ 引导数据合成。" />
     </div>
     <div class="method-body">
       <Method />
     </div>
   </Section>
 
-  <Section title="Results" id="results">
-    <p>We evaluated the proposed model across four key tasks: For <strong>Toxicity Detection</strong>, we augmented the training set with synthetic samples and evaluated on <a href="https://arxiv.org/abs/2310.17389" target="_blank">ToxicChat</a> (10,165 real user queries from LMSys, ~7.33% toxic), reporting <strong>AUPRC</strong> as the primary metric. For <strong>Reward Modeling</strong>, we enriched the preference data with synthetic preference pairs, and then evaluated on <a href="https://github.com/allenai/reward-bench" target="_blank">RewardBench</a> (2985 conversation pairs across Chat, Chat-Hard, Safety, and Reasoning subtasks), reporting <strong>Average Accuracy</strong> in Table 1. For <strong>Behavior Steering</strong>, we directly constructed steering vectors using the synthetic data and tested on the test set from <a href="https://arxiv.org/abs/2312.06681" target="_blank">Rimsky et al. (2024)</a>, focusing on Sycophancy and Survival Instinct sub-tasks, measuring <strong>Robust Accuracy</strong> (position-swapped evaluation to eliminate ordering bias). For <strong>Instruction Following</strong>, we assessed performance on <a href="https://github.com/tatsu-lab/alpaca_eval" target="_blank">AlpacaEval 2</a> (805 real-user instructions) using preference-based evaluation against GPT-4-Turbo-1106 as the reference comparator.</p>
+  <Section title="结果" id="results">
+    <p>我们在四个关键任务上评估了提出的数据合成模型：对于<strong>毒性检测</strong>，我们使用生成的合成样本增强训练集，并在 <a href="https://arxiv.org/abs/2310.17389" target="_blank">ToxicChat</a>（来自 LMSys 的 10,165 个真实用户查询，约 7.33% 有毒）上进行评估，报告 <strong>AUPRC</strong> 作为主要指标。对于<strong>奖励建模</strong>，我们使用特征引导方法合成的偏好对丰富偏好数据，然后在 <a href="https://github.com/allenai/reward-bench" target="_blank">RewardBench</a>（2985 个对话对，涵盖 Chat、Chat-Hard、Safety 和 Reasoning 子任务）上进行评估，在表 1 中报告<strong>平均准确率</strong>。对于<strong>行为引导</strong>，我们使用合成数据直接构建引导向量，并在 <a href="https://arxiv.org/abs/2312.06681" target="_blank">Rimsky et al. (2024)</a> 的测试集上进行测试，重点关注 Sycophancy 和 Survival Instinct 子任务，测量<strong>鲁棒准确率</strong>（位置交换评估以消除排序偏差）。对于<strong>指令遵循</strong>，我们在 <a href="https://github.com/tatsu-lab/alpaca_eval" target="_blank">AlpacaEval 2</a>（805 个真实用户指令）上进行基于偏好的评估，并以 GPT-4-Turbo-1106 作为参考比较器衡量胜率表现。</p>
     
-    <p style="margin-top: 2rem;">Table 1. Performance comparison with baselines on four tasks. The best result in each column is <strong>bolded</strong>. For the Behavior Steering task, Steering Control Rate (SCR) is computed as the robust accuracy difference between activation multipliers of 1 and −1: SCR = Acc<sub>mult.=1</sub> − Acc<sub>mult.=−1.</sub></p>
+    <p style="margin-top: 2rem;">表1. 四项任务上与基线方法的性能对比。每一列中的最佳结果以<strong>粗体</strong>标出。对于行为引导任务，Steering Control Rate（SCR）定义为激活倍率为 1 与 −1 时的鲁棒准确率差值：
+SCR = Acc<sub>mult.=1</sub> − Acc<sub>mult.=−1</sub>.</p>
     <ResultsTable>
       <table>
         <thead>
           <tr>
-            <th rowspan="2" style="text-align: left;">Method</th>
-            <th style="text-align: center;">Toxicity<br/>Detection</th>
-            <th style="text-align: center;">Reward<br/>Modeling</th>
-            <th colspan="2" style="text-align: center;">Behavior Steering</th>
-            <th colspan="3" style="text-align: center;">Instruction Following<br/>GPT-4-Turbo (1106)</th>
+            <th rowspan="2" style="text-align: left;">方法</th>
+            <th style="text-align: center;">毒性检测</th>
+            <th style="text-align: center;">奖励建模</th>
+            <th colspan="2" style="text-align: center;">行为引导</th>
+            <th colspan="3" style="text-align: center;">指令遵循<br/>GPT-4-Turbo (1106)</th>
           </tr>
           <tr>
             <th style="text-align: center;">AUPRC (%)</th>
@@ -106,7 +95,7 @@ const citationBib = `@article{less-is-enough-2026,
         </thead>
         <tbody>
           <tr style="background: #f8f9fa;">
-            <td colspan="8" style="font-weight: 600; text-align: left; padding: 0.5rem 0.75rem;">Human-Annotation-based Baselines</td>
+            <td colspan="8" style="font-weight: 600; text-align: left; padding: 0.5rem 0.75rem;">人工标注基线</td>
           </tr>
           <tr>
             <td>Baseline</td>
@@ -129,7 +118,7 @@ const citationBib = `@article{less-is-enough-2026,
             <td>0.70</td>
           </tr>
           <tr style="background: #f8f9fa;">
-            <td colspan="8" style="font-weight: 600; text-align: left; padding: 0.5rem 0.75rem;">LLM-Synthesis-based Baselines</td>
+            <td colspan="8" style="font-weight: 600; text-align: left; padding: 0.5rem 0.75rem;">LLM 合成基线</td>
           </tr>
           <tr>
             <td>Alpaca (Taori et al., 2023)</td>
@@ -215,43 +204,43 @@ const citationBib = `@article{less-is-enough-2026,
       </table>
     </ResultsTable>
     <p style="margin-top: 1.5rem; font-size: 1.05rem; line-height: 1.7; color: #334155;">
-      <strong>Our proposed method consistently outperforms all baselines across the four tasks</strong>. Methods that synthesize data with explicitly goal-directed objectives (e.g., enforcing alignment constraints in SAO, Prismatic Synthesis, and SynAlign) tend to be more reliable than instruction expansion or self-evolution approaches, whose performance is often unstable without task-specific guidance. Our method provides a more effective objective by explicitly targeting missing task-relevant SAE features, leading to the most consistent and strongest gains across tasks.
+      <strong>我们的覆盖引导合成在所有任务上都优于所有基线。</strong>值得注意的是，相比近期 LLM 合成方法（如毒性检测上比 SynAlign +4% AUPRC，行为引导上 +19% SCR），我们使用了相当或更少的合成数据，证明定向补充缺失的任务相关特征比单纯扩大数据量更有效。
     </p>
-    <h3 style="margin-top: 3rem; margin-bottom: 1.5rem; font-size: 1.35rem; font-weight: 700; color: #1e293b;">Research Questions</h3>
+    <h3 style="margin-top: 3rem; margin-bottom: 1.5rem; font-size: 1.35rem; font-weight: 700; color: #1e293b;">研究问题</h3>
     
     <div class="result-qa">
-      <h4 class="result-qa-title">RQ1: Does FAC predict downstream task performance?</h4>
-      <p>Content coming soon.</p>
+      <h4 class="result-qa-title">RQ1：FAC 指标能否预测下游任务性能？</h4>
+      <p>内容即将添加。</p>
     </div>
     
     <div class="result-qa result-qa--alt">
-      <h4 class="result-qa-title">RQ2: Does adding missing task-relevant data improve performance?</h4>
-      <p>Content coming soon.</p>
+      <h4 class="result-qa-title">RQ2：增加缺失的任务相关数据是否能提升结果？</h4>
+      <p>内容即将添加。</p>
     </div>
     
     <div class="result-qa">
-      <h4 class="result-qa-title">RQ3: Can synthesized data transfer across different models?</h4>
-      <p>Content coming soon.</p>
+      <h4 class="result-qa-title">RQ3：这些目标特征合成的数据能否在不同模型之间迁移？</h4>
+      <p>内容即将添加。</p>
     </div>
     
     <div class="result-qa result-qa--alt">
-      <h4 class="result-qa-title">RQ4: Can the model self-evolve through iterative synthesis?</h4>
-      <p>Content coming soon.</p>
+      <h4 class="result-qa-title">RQ4：模型是否可以自我进化？</h4>
+      <p>内容即将添加。</p>
     </div>
     
     <div class="result-qa">
-      <h4 class="result-qa-title">RQ5: How sensitive is the method to hyperparameters?</h4>
-      <p>Content coming soon.</p>
+      <h4 class="result-qa-title">RQ5：该方法对超参数的敏感性是什么样的？</h4>
+      <p>内容即将添加。</p>
     </div>
     
     <div class="result-qa result-qa--alt">
-      <h4 class="result-qa-title">RQ6: How do we detect features and synthesize corresponding data?</h4>
-      <p>Content coming soon.</p>
+      <h4 class="result-qa-title">RQ6：我们是如何检测特征并合成对应数据的？</h4>
+      <p>内容即将添加。</p>
     </div>
   </Section>
 
-  <Section title="Citation" id="citation" variant="dark">
-    <p>If you find this work useful, please cite:</p>
+  <Section title="引用" id="citation" variant="dark">
+    <p>若本工作对您有帮助，欢迎引用：</p>
     <pre><code>{citationBib}</code></pre>
   </Section>
 
@@ -267,7 +256,7 @@ const citationBib = `@article{less-is-enough-2026,
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.75rem 2.5rem;
+  padding: 1.1rem 2.5rem;
   background: #fff;
   border-bottom: 1px solid #e2e8f0;
 }

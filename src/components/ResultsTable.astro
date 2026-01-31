@@ -1,0 +1,64 @@
+---
+---
+
+<div class="results-table-wrap">
+  <slot />
+</div>
+
+<style>
+.results-table-wrap {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.results-table-wrap :global(table) {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.results-table-wrap :global(th),
+.results-table-wrap :global(td) {
+  padding: 0.65rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.results-table-wrap :global(thead th) {
+  background: #f1f5f9;
+  font-weight: 600;
+  color: #334155;
+}
+
+.results-table-wrap :global(tbody tr:last-child td) {
+  border-bottom: none;
+}
+
+.results-table-wrap :global(tbody tr.highlight) {
+  background: #eff6ff;
+}
+
+.results-table-wrap :global(tbody tr.highlight td) {
+  border-bottom-color: #bfdbfe;
+}
+
+.paper-section-dark .results-table-wrap {
+  border-color: #334155;
+}
+
+.paper-section-dark .results-table-wrap :global(th),
+.paper-section-dark .results-table-wrap :global(td) {
+  border-bottom-color: #334155;
+}
+
+.paper-section-dark .results-table-wrap :global(thead th) {
+  background: #1e293b;
+  color: #e2e8f0;
+}
+
+.paper-section-dark .results-table-wrap :global(tbody tr.highlight) {
+  background: rgba(59, 130, 246, 0.15);
+}
+</style>
