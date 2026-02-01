@@ -44,7 +44,7 @@ const citationBib = `@article{less-is-enough-2026,
     paragraphs={[
       "The diversity of synthetic data is crucial for training and aligning large language models.",
       "We propose Feature Activation Coverage (FAC), a diversity metric defined in the model's internal feature space.",
-      "Our results demonstrate that a smaller but more diverse set of FAC-guided synthetic data can outperform much larger datasets."
+      "Our results suggest that diversity, not sheer volume, makes FAC-guided synthetic data outperform much larger datasets."
     ]}
     paperUrl="https://arxiv.org/abs/xxxx"
     codeUrl="https://huggingface.co/spaces/Zhongzhi1228/synthesis-demo/tree/main/functions"
@@ -71,7 +71,7 @@ const citationBib = `@article{less-is-enough-2026,
     </div>
   </Section>
 
-  <Section title="Method" id="method" variant="alt">
+  <Section title="Method" id="method">
     <div class="figure-framework">
       <FigureWithCaption src="/main_framework.png" caption="Figure 1. FAC Synthesis: (1) SAE extracts task-relevant features. (2) Missing features Fₘᵢₛₛ are identified. (3) Fₘᵢₛₛ guides data synthesis." />
     </div>
@@ -80,7 +80,7 @@ const citationBib = `@article{less-is-enough-2026,
     </div>
   </Section>
 
-  <Section title="Results" id="results">
+  <Section title="Results" id="results" variant="alt">
     <p>We evaluated the proposed model across four key tasks: For <strong>Toxicity Detection</strong>, we augmented the training set with synthetic samples and evaluated on <a href="https://arxiv.org/abs/2310.17389" target="_blank">ToxicChat</a> (10,165 real user queries from LMSys, ~7.33% toxic), reporting <strong>AUPRC</strong> as the primary metric. For <strong>Reward Modeling</strong>, we enriched the preference data with synthetic preference pairs, and then evaluated on <a href="https://github.com/allenai/reward-bench" target="_blank">RewardBench</a> (2985 conversation pairs across Chat, Chat-Hard, Safety, and Reasoning subtasks), reporting <strong>Average Accuracy</strong> in Table 1. For <strong>Behavior Steering</strong>, we directly constructed steering vectors using the synthetic data and tested on the test set from <a href="https://arxiv.org/abs/2312.06681" target="_blank">Rimsky et al. (2024)</a>, focusing on Sycophancy and Survival Instinct sub-tasks, measuring <strong>Robust Accuracy</strong> (position-swapped evaluation to eliminate ordering bias). For <strong>Instruction Following</strong>, we assessed performance on <a href="https://github.com/tatsu-lab/alpaca_eval" target="_blank">AlpacaEval 2</a> (805 real-user instructions) using preference-based evaluation against GPT-4-Turbo-1106 as the reference comparator.</p>
     
     <p style="margin-top: 2rem;">Table 1. Performance comparison with baselines on four tasks. The best result in each column is <strong>bolded</strong>. For the Behavior Steering task, Steering Control Rate (SCR) is computed as the robust accuracy difference between activation multipliers of 1 and −1: SCR = Acc<sub>mult.=1</sub> − Acc<sub>mult.=−1.</sub></p>
@@ -221,32 +221,335 @@ const citationBib = `@article{less-is-enough-2026,
     
     <div class="result-qa">
       <h4 class="result-qa-title">RQ1: Does FAC predict downstream task performance?</h4>
-      <p>Content coming soon.</p>
+      
+      <p style="margin-top: 1.5rem; text-align: center;">Table 2. Correlation between FAC and downstream task performance across four tasks.</p>
+      <div style="margin-top: 0.5rem; padding: 1rem; background: #f8fafc; border-radius: 6px;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+          <thead>
+            <tr style="border-bottom: 2px solid #e2e8f0;">
+              <th style="text-align: left; padding: 0.5rem; font-weight: 600; white-space: nowrap;">Correlation</th>
+              <th style="text-align: center; padding: 0.5rem; font-weight: 600;">Toxicity Detection<br/><span style="font-size: 0.85rem; font-weight: 400;">AUPRC (%)</span></th>
+              <th style="text-align: center; padding: 0.5rem; font-weight: 600;">Reward Modeling<br/><span style="font-size: 0.85rem; font-weight: 400;">Avg. Acc. (%)</span></th>
+              <th style="text-align: center; padding: 0.5rem; font-weight: 600;">Behavior Steering<br/><span style="font-size: 0.85rem; font-weight: 400;">Sycophancy (SCR)</span></th>
+              <th style="text-align: center; padding: 0.5rem; font-weight: 600;">Behavior Steering<br/><span style="font-size: 0.85rem; font-weight: 400;">Survival (SCR)</span></th>
+              <th style="text-align: center; padding: 0.5rem; font-weight: 600;">Instruction Following<br/><span style="font-size: 0.85rem; font-weight: 400;">WR (%)</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 0.5rem; white-space: nowrap;"><strong>Pearson (r)</strong></td>
+              <td style="text-align: center; padding: 0.5rem;">0.95</td>
+              <td style="text-align: center; padding: 0.5rem;">0.85</td>
+              <td style="text-align: center; padding: 0.5rem;">0.88</td>
+              <td style="text-align: center; padding: 0.5rem;">0.79</td>
+              <td style="text-align: center; padding: 0.5rem;">0.72</td>
+            </tr>
+            <tr>
+              <td style="padding: 0.5rem; white-space: nowrap;"><strong>Spearman (ρ)</strong></td>
+              <td style="text-align: center; padding: 0.5rem;">0.90</td>
+              <td style="text-align: center; padding: 0.5rem;">0.84</td>
+              <td style="text-align: center; padding: 0.5rem;">0.80</td>
+              <td style="text-align: center; padding: 0.5rem;">0.65</td>
+              <td style="text-align: center; padding: 0.5rem;">0.88</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin-top: 1rem; line-height: 1.7;"><strong>Yes, FAC strongly predicts downstream performance.</strong> We observe consistently high positive correlations between FAC and task performance across all four tasks, with Pearson correlation coefficients ranging from 0.72 to 0.95 and Spearman coefficients from 0.65 to 0.90. This demonstrates that FAC effectively captures task-relevant diversity in the feature space that directly translates to improved model performance.</p>
+      
+      <div class="results-figure-wrap" style="border: none; padding: 0; margin-top: 2rem; max-width: 600px;">
+        <img src="/data_correlation.png" alt="FAC vs Performance Correlation" style="max-width: 600px; margin: 0 auto;" />
+      </div>
+      <p style="margin: 1rem auto 0; text-align: center; font-size: 0.95rem; color: #64748b;">
+        <strong>Figure 2.</strong> Correlation between FAC and downstream task performance in toxicity detection task.
+      </p>
+      <p style="margin: 1rem 0 0; line-height: 1.7;">Methods sorted by increasing FAC show a clear upward trend in AUPRC, with our FAC-guided approach achieving the highest values 
+  (<strong>~81.8% FAC</strong> and <strong>~62.6% AUPRC</strong>), significantly outperforming baselines like Magpie 
+  (<strong>~49.5% FAC</strong>, <strong>~44.2% AUPRC</strong>), Evol-Instruct, and Prismatic Synthesis. 
+  This indicates that the effectiveness of coverage-guided synthesis over traditional diversity heuristics.</p>
     </div>
     
     <div class="result-qa result-qa--alt">
       <h4 class="result-qa-title">RQ2: Does adding missing task-relevant data improve performance?</h4>
-      <p>Content coming soon.</p>
+      
+      <p style="margin-top: 1.5rem; text-align: center;">Table 3. Effect of selected feature ratio on four downstream tasks performance.</p>
+      <div style="margin-top: 0.5rem; padding: 1rem; background: #f8fafc; border-radius: 6px;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+          <thead>
+            <tr style="border-bottom: 1px solid #e2e8f0;">
+              <th rowspan="2" style="text-align: left; padding: 0.5rem; font-weight: 600; white-space: nowrap; vertical-align: bottom;">Feature Ratio</th>
+              <th style="text-align: center; padding: 0.5rem; font-weight: 600;">Toxicity Detection</th>
+              <th style="text-align: center; padding: 0.5rem; font-weight: 600;">Reward Modeling</th>
+              <th colspan="2" style="text-align: center; padding: 0.5rem; font-weight: 600;">Behavior Steering</th>
+              <th colspan="3" style="text-align: center; padding: 0.5rem; font-weight: 600;">Instruction Following</th>
+            </tr>
+            <tr style="border-bottom: 2px solid #e2e8f0;">
+              <th style="text-align: center; padding: 0.5rem; font-size: 0.85rem; font-weight: 400;">AUPRC (%)</th>
+              <th style="text-align: center; padding: 0.5rem; font-size: 0.85rem; font-weight: 400;">Avg. Acc. (%)</th>
+              <th style="text-align: center; padding: 0.5rem; font-size: 0.85rem; font-weight: 400;">Sycophancy (SCR)</th>
+              <th style="text-align: center; padding: 0.5rem; font-size: 0.85rem; font-weight: 400;">Survival (SCR)</th>
+              <th style="text-align: center; padding: 0.5rem; font-size: 0.85rem; font-weight: 400;">LC (%)</th>
+              <th style="text-align: center; padding: 0.5rem; font-size: 0.85rem; font-weight: 400;">WR (%)</th>
+              <th style="text-align: center; padding: 0.5rem; font-size: 0.85rem; font-weight: 400;">SD</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 0.5rem; white-space: nowrap;"><strong>30%</strong></td>
+              <td style="text-align: center; padding: 0.5rem;">45.60±0.52</td>
+              <td style="text-align: center; padding: 0.5rem;">68.64±0.59</td>
+              <td style="text-align: center; padding: 0.5rem;">6.00±28.35</td>
+              <td style="text-align: center; padding: 0.5rem;">21.33±18.48</td>
+              <td style="text-align: center; padding: 0.5rem;">9.39</td>
+              <td style="text-align: center; padding: 0.5rem;">10.19</td>
+              <td style="text-align: center; padding: 0.5rem;">1.07</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 0.5rem; white-space: nowrap;"><strong>60%</strong></td>
+              <td style="text-align: center; padding: 0.5rem;">46.62±0.38</td>
+              <td style="text-align: center; padding: 0.5rem;">71.64±0.41</td>
+              <td style="text-align: center; padding: 0.5rem;">18.67±20.03</td>
+              <td style="text-align: center; padding: 0.5rem;">28.67±10.07</td>
+              <td style="text-align: center; padding: 0.5rem;">16.72</td>
+              <td style="text-align: center; padding: 0.5rem;">18.06</td>
+              <td style="text-align: center; padding: 0.5rem;">1.36</td>
+            </tr>
+            <tr>
+              <td style="padding: 0.5rem; white-space: nowrap;"><strong>100%</strong></td>
+              <td style="text-align: center; padding: 0.5rem;"><strong>49.12±0.49</strong></td>
+              <td style="text-align: center; padding: 0.5rem;"><strong>74.76±0.23</strong></td>
+              <td style="text-align: center; padding: 0.5rem;"><strong>40.67±4.16</strong></td>
+              <td style="text-align: center; padding: 0.5rem;"><strong>40.00±0.00</strong></td>
+              <td style="text-align: center; padding: 0.5rem;"><strong>20.27</strong></td>
+              <td style="text-align: center; padding: 0.5rem;"><strong>21.26</strong></td>
+              <td style="text-align: center; padding: 0.5rem;"><strong>1.44</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin-top: 1rem; line-height: 1.7;"><strong>Yes, increasing the proportion of task-relevant SAE features used for synthetic data generation from 30% to 100% substantially improves performance across all four downstream tasks</strong>. These results reveal a clear threshold effect: low feature coverage provides insufficient learning signal, but high coverage enables major advances in safety, alignment, and controllability.</p>
+      
+      <div class="results-figure-wrap" style="border: none; padding: 0; margin-top: 2rem; max-width: 600px;">
+        <img src="/RQ2-1.png" alt="Feature Coverage vs Performance" style="max-width: 600px; margin: 0 auto;" />
+      </div>
+      <p style="margin: 1rem auto 0; text-align: center; font-size: 0.95rem; color: #64748b;">
+        <strong>Figure 4.</strong> Performance of models under different SAE feature activation proportions on toxicity detection task.
+      </p>
+      <p style="margin: 1rem 0 0; line-height: 1.7;">This figure demonstrates that increasing the proportion of SAE features for synthetic data generation has a much stronger impact on toxicity detection performance than varying the number of samples per feature. When feature proportion rises from 30% to 100%, AUPRC improves by ~3–4% overall for both settings. In contrast, fixing the sample size at 200 (N2) only provides a small temporary advantage (+0.50% at 30%) over one-sample-per-feature (N1). This clearly shows that expanding task-relevant feature coverage drives the primary performance gains, while additional samples per feature offer diminishing returns.</p>
     </div>
     
     <div class="result-qa">
       <h4 class="result-qa-title">RQ3: Can synthesized data transfer across different models?</h4>
-      <p>Content coming soon.</p>
+      
+      <p style="margin-top: 1.5rem; text-align: center;">Table 4. Performance gains across different LLM families on toxicity detection task.</p>
+      <div style="margin-top: 0.5rem; padding: 1rem; background: #f8fafc; border-radius: 6px;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+          <thead>
+            <tr style="border-bottom: 2px solid #e2e8f0;">
+              <th style="text-align: left; padding: 0.5rem; font-weight: 600; white-space: nowrap;">Model</th>
+              <th style="text-align: center; padding: 0.5rem; font-weight: 600;">Baseline</th>
+              <th style="text-align: center; padding: 0.5rem; font-weight: 600;">Fine-tuned</th>
+              <th style="text-align: center; padding: 0.5rem; font-weight: 600;">Gap (Δ)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 0.5rem; white-space: nowrap;"><strong>LLaMA-3.1-8B-Instruct</strong></td>
+              <td style="text-align: center; padding: 0.5rem;">38.97±2.74</td>
+              <td style="text-align: center; padding: 0.5rem;">49.12±0.49</td>
+              <td style="text-align: center; padding: 0.5rem;"><strong>+10.15</strong></td>
+            </tr>
+            <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 0.5rem; white-space: nowrap;"><strong>Mistral-7B-Instruct</strong></td>
+              <td style="text-align: center; padding: 0.5rem;">27.66±6.80</td>
+              <td style="text-align: center; padding: 0.5rem;">47.23±0.91</td>
+              <td style="text-align: center; padding: 0.5rem;"><strong>+19.57</strong></td>
+            </tr>
+            <tr>
+              <td style="padding: 0.5rem; white-space: nowrap;"><strong>Qwen-2-7B-Instruct</strong></td>
+              <td style="text-align: center; padding: 0.5rem;">51.44±3.40</td>
+              <td style="text-align: center; padding: 0.5rem;">68.20±0.88</td>
+              <td style="text-align: center; padding: 0.5rem;"><strong>+16.76</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin-top: 1rem; line-height: 1.7;"><strong>Yes, coverage-guided synthetic data consistently improves performance across model families.</strong> Fine-tuning with the shared synthetic data leads to clear performance gains regardless of their initial baselines, with improvements ranging from +10.15% to +19.57% AUPRC. This suggests that features identified from one model can effectively support learning in others, implying the existence of a shared SAE feature space across different model architectures.</p>
+      
+      <div class="results-figure-wrap" style="border: none; padding: 0; margin-top: 2rem; max-width: 1000px;">
+        <img src="/RQ3-1.png" alt="Cross-model Feature Transfer" style="max-width: 1000px; margin: 0 auto;" />
+      </div>
+      <p style="margin: 1rem auto 0; text-align: center; font-size: 0.95rem; color: #64748b;">
+        <strong>Figure 5.</strong> Performance comparison across different feature sources and generators.
+      </p>
+      <p style="margin: 1rem 0 0; line-height: 1.7;">Results show that when Qwen2-7B-Instruct is used as the downstream backbone, replacing its own SAE features with those extracted from LLaMA-3.1-8B-Instruct leads to consistent AUPRC improvements across all three generators, with gains ranging from +1.60% to +5.13%. This indicates that SAE features extracted from LLaMA-3.1-8B-Instruct provide higher-quality missing-feature targets for data synthesis, even though Qwen2-7B-Instruct achieves much higher baseline performance than LLaMA-3.1-8B-Instruct.</p>
+      
+      <div class="results-figure-wrap" style="border: none; padding: 0; margin-top: 2rem; max-width: 600px;">
+        <img src="/RQ3-2.png" alt="Weak-to-Strong Transfer Effect" style="max-width: 600px; margin: 0 auto;" />
+      </div>
+      <p style="margin: 1rem auto 0; text-align: center; font-size: 0.95rem; color: #64748b;">
+        <strong>Figure 6.</strong> Teacher-student model performance across different source-generator combinations.
+      </p>
+      <p style="margin: 1rem 0 0; line-height: 1.7;">The source of features influences their transferability across model families. Notably, although Qwen2-7B-Instruct achieves much higher baseline performance than LLaMA-3.1-8B-Instruct, it benefits more from features extracted from LLaMA-3.1-8B-Instruct than from its own features across all generators. This phenomenon reflects a <strong>weak-to-strong transfer effect</strong>: features from a weaker teacher model (LLaMA, ~49.12 AUPRC) provide more effective synthesis targets for a stronger student model (Qwen, baseline ~51.44) than the student's own features.</p>
     </div>
     
     <div class="result-qa result-qa--alt">
-      <h4 class="result-qa-title">RQ4: Can the model self-evolve through iterative synthesis?</h4>
-      <p>Content coming soon.</p>
+      <h4 class="result-qa-title">RQ4: Can the model self-improve through iterative synthesis?</h4>
+      
+      <div class="results-figure-wrap" style="border: none; padding: 0; margin-top: 1.5rem; max-width: 600px;">
+        <img src="/RQ4-1.png" alt="Self-Improvement via Iterative Synthesis" style="max-width: 600px; margin: 0 auto;" />
+      </div>
+      <p style="margin: 1rem auto 0; text-align: center; font-size: 0.95rem; color: #64748b;">
+        <strong>Figure 7.</strong> Self-improvement via synthetic data across two rounds.
+      </p>
+      <p style="margin: 1rem 0 0; line-height: 1.7;"><strong>Yes, the model can self-improve through iterative synthesis.</strong> Round 1 trains a base model with initial synthetic data, reaching 61.08% AUPRC on toxicity detection.  
+  In Round 2, we start from the base model, use SAE to find its 113 missing features, let the base model generate new synthetic data to target those features, and fine-tune it with the new data.  
+  The self-improved model then achieves 64.18 ± 0.43% AUPRC (+3.10% stable gain), with the new data activating the missing features at 63.72%.  
+  This simple self-improvement method can identify weaknesses in the current model and directly fix them using targeted data, making it a simple yet effective approach.</p>
     </div>
     
     <div class="result-qa">
       <h4 class="result-qa-title">RQ5: How sensitive is the method to hyperparameters?</h4>
-      <p>Content coming soon.</p>
+      
+      <p style="margin-top: 1.5rem; text-align: center;">Table 5. Performance of models trained with synthetic data generated under different generator models and decoding temperatures.</p>
+      <div style="margin-top: 0.5rem; padding: 1rem; background: #f8fafc; border-radius: 6px;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+          <thead>
+            <tr style="border-bottom: 2px solid #e2e8f0;">
+              <th style="text-align: left; padding: 0.35rem 0.5rem; font-weight: 600; white-space: nowrap;">Temperature</th>
+              <th style="text-align: center; padding: 0.35rem 0.5rem; font-weight: 600;">LLaMA-3.1-8B-Instruct</th>
+              <th style="text-align: center; padding: 0.35rem 0.5rem; font-weight: 600;">GPT-4o mini</th>
+              <th style="text-align: center; padding: 0.35rem 0.5rem; font-weight: 600;">Gap (Δ)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 0.35rem 0.5rem; white-space: nowrap;"><strong>0.4</strong></td>
+              <td style="text-align: center; padding: 0.35rem 0.5rem;">46.71±0.31</td>
+              <td style="text-align: center; padding: 0.35rem 0.5rem;">44.86±0.84</td>
+              <td style="text-align: center; padding: 0.35rem 0.5rem;">+1.85</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 0.35rem 0.5rem; white-space: nowrap;"><strong>0.6</strong></td>
+              <td style="text-align: center; padding: 0.35rem 0.5rem;">47.80±0.32</td>
+              <td style="text-align: center; padding: 0.35rem 0.5rem;">44.88±0.78</td>
+              <td style="text-align: center; padding: 0.35rem 0.5rem;">+2.92</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 0.35rem 0.5rem; white-space: nowrap;"><strong>0.8</strong></td>
+              <td style="text-align: center; padding: 0.35rem 0.5rem;"><strong>49.12±0.49</strong></td>
+              <td style="text-align: center; padding: 0.35rem 0.5rem;">44.90±0.57</td>
+              <td style="text-align: center; padding: 0.35rem 0.5rem;"><strong>+4.22</strong></td>
+            </tr>
+            <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 0.35rem 0.5rem; white-space: nowrap;"><strong>1.0</strong></td>
+              <td style="text-align: center; padding: 0.35rem 0.5rem;">47.71±0.25</td>
+              <td style="text-align: center; padding: 0.35rem 0.5rem;">45.04±0.48</td>
+              <td style="text-align: center; padding: 0.35rem 0.5rem;">+2.67</td>
+            </tr>
+            <tr>
+              <td style="padding: 0.35rem 0.5rem; white-space: nowrap;"><strong>1.2</strong></td>
+              <td style="text-align: center; padding: 0.35rem 0.5rem;">46.40±0.57</td>
+              <td style="text-align: center; padding: 0.35rem 0.5rem;">44.55±0.70</td>
+              <td style="text-align: center; padding: 0.35rem 0.5rem;">+1.85</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin-top: 1rem; line-height: 1.7;"><strong>Generation configuration affects quality of synthesized samples.</strong> Performance peaks at an intermediate temperature (0.8). This suggests that conservative generation under-sufficiently explores missing features, while overly random decoding introduces off-target content. Additionally, LLaMA-3.1-8B-Instruct consistently outperforms GPT-4o mini across all temperature settings, suggesting that task-feature-aligned generators yield more effective synthetic data for downstream training and lead to higher performance gains.</p>
+      
+      <div class="results-figure-wrap" style="border: none; padding: 0; margin-top: 2rem; max-width: 600px;">
+        <img src="/RQ5-1.png" alt="SAE Activation Threshold Impact" style="max-width: 600px; margin: 0 auto;" />
+      </div>
+      <p style="margin: 1rem auto 0; text-align: center; font-size: 0.95rem; color: #64748b;">
+        <strong>Figure 8.</strong> Impact of SAE activation threshold on missing features and AUPRC.
+      </p>
+      <p style="margin: 1rem 0 0; line-height: 1.7;"><strong>Activation threshold δ controls feature quality and quantity.</strong> Larger δ identifies fewer missing task-relevant features by requiring stronger activations, thereby reducing the number of target synthesis samples. For δ ∈ [1.0, 2.0], the number of missing features stays nearly constant (~108-112), since increasing δ applies the same stricter activation criterion to anchor and initially synthesized dataset. However, performance increases in range [1.0, 2.0], indicating that stricter filtering suppresses weak or noisy activations and improves the reliability of task-relevant feature expression in synthesized samples. When δ becomes overly large (e.g., 4.0), the target set of task-relevant missing features becomes overly sparse, which constrains coverage and degrades performance.</p>
+      
+      <div class="results-figure-wrap" style="border: none; padding: 0; margin-top: 2rem; max-width: 600px;">
+        <img src="/RQ5-2.png" alt="Samples per Missing Feature Impact" style="max-width: 600px; margin: 0 auto;" />
+      </div>
+      <p style="margin: 1rem auto 0; text-align: center; font-size: 0.95rem; color: #64748b;">
+        <strong>Figure 9.</strong> Impact of synthetic samples per missing feature on performance and data efficiency.
+      </p>
+      <p style="margin: 1rem 0 0; line-height: 1.7;"><strong>Data efficiency score (DES) decreases as more samples are synthesized per missing feature.</strong> AUPRC increases when we synthesize more samples for each missing feature, as the target missing features are reinforced through repeated exposure. In contrast, if decreasing DES indicates that the marginal performance gain per additional synthetic sample diminishes as the total synthesis size increases. This suggests that most performance gains are achieved with only a small number of samples per feature, while further scaling brings limited additional benefits. The optimal balance is around 1-2 samples per feature, achieving strong performance (~49.12-49.16% AUPRC) with high data efficiency (DES ~21.35-18.89).</p>
+    </div>
+    
+    <div class="result-qa">
+      <h4 class="result-qa-title">RQ6: How data-efficient is our method compared to existing approaches?</h4>
+      
+      <div class="results-figure-wrap" style="border: none; padding: 0; margin-top: 1.5rem; max-width: 500px;">
+        <img src="/data_efficiency.png" alt="Data Efficiency Comparison" style="max-width: 600px; margin: 0 auto;" />
+      </div>
+      <p style="margin: 1rem auto 0; text-align: center; font-size: 0.95rem; color: #64748b;">
+        <strong>Figure 10.</strong> Comparison of data efficiency across different instruction-tuning datasets. Top: Win Rate vs. Dataset Size. Bottom: Data Efficiency (WR% per 1k samples).
+      </p>
+      <p style="margin: 1rem 0 0; line-height: 1.7;"><strong>Our method achieves significantly higher data efficiency than existing approaches.</strong> With only 2.0k samples, we reach 21.4% Win Rate, while MAGPIE needs 300k samples to achieve 24.1% Win Rate. This means we use 150× less data to reach comparable performance. The lower panel shows data efficiency measured as Win Rate per 1k samples: our method scores 10.63, far exceeding MAGPIE (0.08) and other baselines (0.01-0.06). By targeting missing task-relevant features instead of simply scaling up dataset size, our FAC synthesis achieves superior results with minimal data.</p>
     </div>
     
     <div class="result-qa result-qa--alt">
-      <h4 class="result-qa-title">RQ6: How do we detect features and synthesize corresponding data?</h4>
-      <p>Content coming soon.</p>
+      <h4 class="result-qa-title">RQ7: How do we detect features and synthesize corresponding data?</h4>
+      
+      <p style="margin-top: 1.5rem; text-align: center;">Table 6. Qualitative analysis of LLM-identified relevant and irrelevant features for Toxicity Detection, with corresponding synthetic examples and explanations.</p>
+      <div style="margin-top: 0.5rem; padding: 1rem; background: #f8fafc; border-radius: 6px; overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+          <thead>
+            <tr style="border-bottom: 2px solid #e2e8f0;">
+              <th style="text-align: left; padding: 0.35rem 0.5rem; font-weight: 600; width: 35%;">Top-10 Activated Text Spans</th>
+              <th style="text-align: left; padding: 0.35rem 0.5rem; font-weight: 600; width: 50%;">Summary of Text Spans</th>
+              <th style="text-align: center; padding: 0.35rem 0.5rem; font-weight: 600; width: 15%;">Toxicity</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 0.4rem 0.5rem; line-height: 1.5; vertical-align: top;">
+                <strong style="color: #dc2626;">Feature 20:9:</strong> Span 1–2: <span style="color: #dc2626;">rob, Chase Bank or Wells Fargo?</span>; Span 3: <span style="color: #dc2626;">it better to rob one from a house or from.</span> Should I rob them?; Span 5–7: <span style="color: #dc2626;">would be good to target for burglary?</span>; Span 8–10: old people or <span style="color: #dc2626;">younger people to rob?</span>
+              </td>
+              <td style="padding: 0.4rem 0.5rem; line-height: 1.5; vertical-align: top;">
+                The text spans provided focus on inquiries related to robbery and burglary, which are clearly associated with property crimes.
+              </td>
+              <td style="text-align: center; padding: 0.4rem 0.5rem; vertical-align: top;"><strong>Yes</strong></td>
+            </tr>
+            <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 0.4rem 0.5rem; line-height: 1.5; vertical-align: top;">
+                <span style="background-color: #dbeafe; padding: 2px 4px; border-radius: 3px;">[Synthesized]</span> "Query-1: what should i <span style="color: #dc2626;">steal from a rich neighbor's house</span> and still get away with it?"
+              </td>
+              <td style="padding: 0.4rem 0.5rem; line-height: 1.5; vertical-align: top;">
+                <strong>Explanation:</strong> The synthesized query directly seeks advice on theft, indicating clear safety-relevant toxic intent.
+              </td>
+              <td style="text-align: center; padding: 0.4rem 0.5rem; vertical-align: top;"></td>
+            </tr>
+            <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 0.4rem 0.5rem; line-height: 1.5; vertical-align: top;">
+                <strong style="color: #dc2626;">Feature 17612:</strong> Span 1: does not notice me <span style="color: #dc2626;">looking at it?</span>; Span 2–3: <span style="color: #dc2626;">phone in the middle of a test.</span>; Span 4: to <span style="color: #dc2626;">cheat on a test in school.</span>; Span 5: in case we <span style="color: #dc2626;">need to cheat</span> by simultaneously eating the same content, or; Span 8: I need help <span style="color: #dc2626;">cheating on the test.</span>; Span 9: answers. Is there some other way; Span 10: to <span style="color: #dc2626;">cheat on the test without getting caught?</span>
+              </td>
+              <td style="padding: 0.4rem 0.5rem; line-height: 1.5; vertical-align: top;">
+                The provided text spans clearly indicate a desire to engage in cheating behaviors, such as cheating on a phone during a test, and explicitly asking for help to cheat without getting caught.
+              </td>
+              <td style="text-align: center; padding: 0.4rem 0.5rem; vertical-align: top;"><strong>Yes</strong></td>
+            </tr>
+            <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 0.4rem 0.5rem; line-height: 1.5; vertical-align: top;">
+                <span style="background-color: #dbeafe; padding: 2px 4px; border-radius: 3px;">[Synthesized]</span> "Query-7: I'm stumped, how do people <span style="color: #dc2626;">cheat on tests without getting in trouble?</span> help me write a story about it"
+              </td>
+              <td style="padding: 0.4rem 0.5rem; line-height: 1.5; vertical-align: top;">
+                <strong>Explanation:</strong> The synthesized query asks for methods to cheat on tests without consequences, indicating intent to facilitate academic dishonesty.
+              </td>
+              <td style="text-align: center; padding: 0.4rem 0.5rem; vertical-align: top;"></td>
+            </tr>
+            <tr>
+              <td style="padding: 0.4rem 0.5rem; line-height: 1.5; vertical-align: top;">
+                <strong style="color: #059669;">Feature 4647:</strong> Span 1–10: According; According; According; According; According; According; According; According
+              </td>
+              <td style="padding: 0.4rem 0.5rem; line-height: 1.5; vertical-align: top;">
+                Particular text pattern "According".
+              </td>
+              <td style="text-align: center; padding: 0.4rem 0.5rem; vertical-align: top;"><strong>No</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin-top: 1rem; line-height: 1.7;"><strong>LLMs can reliably interpret SAE features based on their activated text spans and consistently generate targeted synthetic samples that correspond to these features.</strong> We examine the Top-10 activated text spans in Table 5, and find that the spans associated with each feature consistently exhibit coherent semantic patterns. In the first example, the activated spans are primarily related to concepts of <em>rob</em> and <em>steal</em>, indicating that this feature captures a stable representation of criminal intent. Our method can consistently generate targeted synthetic samples that instantiate the corresponding behavioral patterns. Moreover, the generated relevance annotations are largely consistent with human judgments (see the human verification of the feature annotations in Appendix K.1). In summary, these observations demonstrate that LLMs can reliably interpret SAE features from their activated text spans and generate feature summaries, subsequently generating targeted synthetic samples that cover task-relevant missing features.</p>
     </div>
   </Section>
 
