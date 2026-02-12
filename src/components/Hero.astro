@@ -2,7 +2,10 @@
 const {
   title,
   subtitle,
-  paragraphs = [],
+  authors = [],
+  affiliations = [],
+  equalContrib = "",
+  highlights = [],
   paperUrl,
   codeUrl,
   datasetUrl,
@@ -17,15 +20,42 @@ const {
 
     <h2 class="hero-subtitle">{subtitle}</h2>
 
-    <div class="hero-abstract">
-      {paragraphs.map(p => <p>{p}</p>)}
-    </div>
+    {authors.length > 0 && (
+      <div class="hero-authors">
+        {authors.map((a: {name: string; sup?: string}, i: number) => (
+          <span class="author-item">
+            <span>{a.name}<sup>{a.sup}</sup></span>
+            {i < authors.length - 1 && <span class="author-sep">&nbsp;&nbsp;&nbsp;</span>}
+          </span>
+        ))}
+      </div>
+    )}
+
+    {affiliations.length > 0 && (
+      <div class="hero-affiliations">
+        {affiliations.map((aff: string) => (
+          <span class="aff-item" set:html={aff} />
+        ))}
+      </div>
+    )}
+
+    {equalContrib && (
+      <div class="hero-equal-contrib">{equalContrib}</div>
+    )}
+
+    {highlights.length > 0 && (
+      <div class="hero-highlights">
+        {highlights.map((h: string) => (
+          <div class="highlight-item" set:html={h} />
+        ))}
+      </div>
+    )}
 
     <div class="hero-buttons">
-      <a href={paperUrl} target="_blank" class="btn">📄 Paper</a>
-      <a href={codeUrl} target="_blank" class="btn">💻 Code</a>
-      <a href={datasetUrl} target="_blank" class="btn">📦 Dataset</a>
-      <a href={demoUrl} target="_blank" class="btn btn-primary">🚀 Demo</a>
+      <a href={paperUrl} target="_blank" class="btn"><span class="btn-icon">📄</span> Paper</a>
+      <a href={codeUrl} target="_blank" class="btn"><span class="btn-icon">💻</span> Code</a>
+      <a href={datasetUrl} target="_blank" class="btn"><span class="btn-icon">📦</span> Dataset</a>
+      <a href={demoUrl} target="_blank" class="btn btn-primary"><span class="btn-icon">🚀</span> Demo</a>
     </div>
 
   </div>
@@ -42,82 +72,175 @@ const {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem 1.5rem;
-  background: linear-gradient(180deg,#fafafa,#ffffff);
+  padding: 2rem 1.5rem 2.5rem;
+  background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 20%, #ddd6fe 40%, #bfdbfe 60%, #bae6fd 80%, #e0f2fe 100%);
+  overflow: hidden;
 }
 
 .hero-inner {
+  position: relative;
+  z-index: 1;
   max-width: 960px;
   margin: 0 auto;
   text-align: center;
 }
 
 .hero-title {
-  font-size: 4rem;
+  font-size: 3.2rem;
   font-weight: 800;
-  line-height: 1.2;
+  line-height: 1.15;
   margin-top: 0;
-  margin-bottom: 0.5em;
+  margin-bottom: 0.35em;
   letter-spacing: -0.02em;
+  color: #0f172a;
 }
 
 .hero-subtitle {
-  font-size: 1.7rem;
-  margin-bottom: 2.25rem;
-  color: #444;
+  font-size: 1.35rem;
+  font-weight: 400;
+  margin-bottom: 3.5rem;
+  color: #475569;
+  line-height: 1.4;
 }
 
-.hero-abstract p {
+.hero-authors {
   font-size: 1.05rem;
-  line-height: 1.75;
-  color: #555;
-  margin-bottom: 1.2rem;
+  font-weight: 500;
+  color: #1e293b;
+  margin-bottom: 0.3rem;
+  line-height: 1.8;
+}
+
+.author-sep {
+  color: #94a3b8;
+}
+
+.hero-affiliations {
+  font-size: 0.95rem;
+  color: #64748b;
+  margin-bottom: 0.25rem;
+  line-height: 1.6;
+}
+
+.aff-item {
+  display: inline;
+  margin: 0 0.4rem;
+}
+
+.hero-equal-contrib {
+  font-size: 0.82rem;
+  color: #64748b;
+  margin-bottom: 4rem;
+  font-style: italic;
+}
+
+.hero-highlights {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 960px;
+  margin: 0 auto 3.5rem;
+  text-align: left;
+}
+
+.highlight-item {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #334155;
+  padding: 0.55rem 1rem;
+  background: rgba(255, 255, 255, 0.85);
+  border-left: 4px solid #3b82f6;
+  border-radius: 0 8px 8px 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
 .hero-buttons {
   display: flex;
   justify-content: center;
-  gap: 0.8rem;
+  gap: 2rem;
   flex-wrap: wrap;
+  margin-top: 4rem;
 }
 
 .btn {
-  padding: 0.6rem 1.2rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.55rem 1.9rem;
   border-radius: 8px;
-  border: 1px solid #ddd;
+  border: 1px solid #cbd5e1;
   background: white;
   font-weight: 600;
+  font-size: 0.92rem;
   text-decoration: none;
-  color: #222;
+  color: #334155;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.btn:hover {
+  border-color: #3b82f6;
+  color: #2563eb;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+  transform: translateY(-1px);
 }
 
 .btn-primary {
-  background: #2563eb;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
   color: white;
   border-color: #2563eb;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  border-color: #1d4ed8;
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
+}
+
+.btn-icon {
+  font-size: 1rem;
 }
 
 @media (max-height: 720px) {
   .hero {
-    padding: 2.5rem 1.5rem;
+    padding: 1.5rem 1.5rem 2rem;
   }
   .hero-title {
-    font-size: 2.6rem;
+    font-size: 2.4rem;
   }
   .hero-subtitle {
-    font-size: 1.35rem;
+    font-size: 1.15rem;
+    margin-bottom: 0.8rem;
+  }
+  .hero-highlights {
     margin-bottom: 1.2rem;
   }
-  .hero-abstract p {
-    font-size: 0.95rem;
-    margin-bottom: 0.6rem;
+  .highlight-item {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
   }
   .hero-buttons {
     gap: 0.5rem;
   }
   .btn {
-    padding: 0.45rem 0.9rem;
-    font-size: 0.9rem;
+    padding: 0.4rem 0.85rem;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-title {
+    font-size: 2rem;
+  }
+  .hero-subtitle {
+    font-size: 1.05rem;
+  }
+  .hero-highlights {
+    max-width: 100%;
+  }
+  .hero-authors {
+    font-size: 0.95rem;
   }
 }
 </style>

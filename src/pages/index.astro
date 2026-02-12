@@ -12,9 +12,8 @@ import { Content as Method } from "../content/en/method.md";
 
 const citationBib = `@article{less-is-enough-2026,
   title     = {Less is Enough: Synthesizing Diverse Data in Feature Space of LLMs},
-  author    = {Zhongzhi Li, Xuansheng Wu, Yijiang Li, Lijie Hu, and Ninghao Liu},
-  year      = {2026},
-  note      = {Published on arXiv}
+  author    = {Zhongzhi Li and Xuansheng Wu and Yijiang Li and Lijie Hu and Ninghao Liu},
+  year      = {2026}
 }`;
 ---
 
@@ -41,14 +40,28 @@ const citationBib = `@article{less-is-enough-2026,
   <Hero
     title="Less is Enough"
     subtitle="Synthesizing Diverse Data in Feature Space of LLMs"
-    paragraphs={[
-      "The diversity of synthetic data is crucial for training and aligning large language models.",
-      "We propose Feature Activation Coverage (FAC), a diversity metric defined in the model's internal feature space.",
-      "Our method achieves 21.4% Win Rate with 2k samples vs. Sota MAGPIE’s 24.1% with 300k, delivering 150× higher data efficiency."
+    authors={[
+      { name: "Zhongzhi Li", sup: "1,*" },
+      { name: "Xuansheng Wu", sup: "1,*" },
+      { name: "Yijiang Li", sup: "2" },
+      { name: "Lijie Hu", sup: "3" },
+      { name: "Ninghao Liu", sup: "4" }
     ]}
-    paperUrl="https://arxiv.org/abs/xxxx"
-    codeUrl="https://huggingface.co/spaces/Zhongzhi1228/synthesis-demo/tree/main/functions"
-    datasetUrl="https://huggingface.co/xxx"
+    affiliations={[
+      "<sup>1</sup> University of Georgia",
+      "<sup>2</sup> University of California, San Diego",
+      "<sup>3</sup> Mohamed bin Zayed University of Artificial Intelligence",
+      "<sup>4</sup> The Hong Kong Polytechnic University"
+    ]}
+    equalContrib="* Equal contribution"
+    highlights={[
+      "If diversity drives performance, <strong>what is diversity?</strong>",
+      "Where should it be measured, <strong>text space or feature space?</strong>",
+      "If it lives in feature space, can we <strong>quantify coverage</strong>, expose what's <strong>missing</strong>, and <strong>synthesize data to improve performance?</strong>"
+    ]}
+    paperUrl="https://arxiv.org/abs/2602.10388"
+    codeUrl="https://github.com/Zhongzhi660/FAC-Synthesis"
+    datasetUrl="https://huggingface.co/Zhongzhi1228/datasets"
     demoUrl="https://huggingface.co/spaces/Zhongzhi1228/synthesis-demo"
   />
   </div>
@@ -571,8 +584,9 @@ const citationBib = `@article{less-is-enough-2026,
   align-items: center;
   justify-content: space-between;
   padding: 0.75rem 2.5rem;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.9);
   border-bottom: 1px solid #e2e8f0;
+  backdrop-filter: blur(8px);
 }
 .header-left {
   display: flex;

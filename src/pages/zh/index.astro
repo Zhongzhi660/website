@@ -12,9 +12,8 @@ import { Content as Method } from "../../content/zh/method.md";
 
 const citationBib = `@article{less-is-enough-2026,
   title     = {Less is Enough: Synthesizing Diverse Data in Feature Space of LLMs},
-  author    = {Zhongzhi Li, Xuansheng Wu, Yijiang Li, Lijie Hu, and Ninghao Liu},
-  year      = {2026},
-  note      = {Published on arXiv}
+  author    = {Zhongzhi Li and Xuansheng Wu and Yijiang Li and Lijie Hu and Ninghao Liu},
+  year      = {2026}
 }`;
 ---
 
@@ -41,14 +40,28 @@ const citationBib = `@article{less-is-enough-2026,
   <Hero
     title="Less is Enough"
     subtitle="在大模型特征空间中合成多样化数据"
-    paragraphs={[
-      "合成数据的多样性对于训练和对齐大型语言模型至关重要。",
-      "本文提出定义在模型特征空间的特征激活覆盖率（FAC），用于评估数据集的多样性。",
-      "本文仅用 2k 个样本达到了 Win Rate 21.4%，而此前的 SOTA MAGPIE 需 300k 个样本才取得相近性能，数据效率提升了 150 倍。"
+    authors={[
+      { name: "Zhongzhi Li", sup: "1,*" },
+      { name: "Xuansheng Wu", sup: "1,*" },
+      { name: "Yijiang Li", sup: "2" },
+      { name: "Lijie Hu", sup: "3" },
+      { name: "Ninghao Liu", sup: "4" }
     ]}
-    paperUrl="https://arxiv.org/abs/xxxx"
-    codeUrl="https://huggingface.co/spaces/Zhongzhi1228/synthesis-demo/tree/main/functions"
-    datasetUrl="https://huggingface.co/xxx"
+    affiliations={[
+      "<sup>1</sup> University of Georgia",
+      "<sup>2</sup> University of California, San Diego",
+      "<sup>3</sup> Mohamed bin Zayed University of Artificial Intelligence",
+      "<sup>4</sup> The Hong Kong Polytechnic University"
+    ]}
+    equalContrib="* Equal contribution"
+    highlights={[
+      "如果多样性决定性能，那<strong>什么才是多样性？</strong>",
+      "应该在哪里评估多样性，<strong>文本空间还是特征空间？</strong>",
+      "如果它存在于特征空间，我们能否<strong>量化覆盖率</strong>、发现<strong>缺失的部分</strong>，并<strong>合成数据来改善性能？</strong>"
+    ]}
+    paperUrl="https://arxiv.org/abs/2602.10388"
+    codeUrl="https://github.com/Zhongzhi660/FAC-Synthesis"
+    datasetUrl="https://huggingface.co/Zhongzhi1228/datasets"
     demoUrl="https://huggingface.co/spaces/Zhongzhi1228/synthesis-demo"
   />
   </div>
@@ -557,8 +570,9 @@ SCR = Acc<sub>mult.=1</sub> − Acc<sub>mult.=−1</sub>.</p>
   align-items: center;
   justify-content: space-between;
   padding: 1.1rem 2.5rem;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.9);
   border-bottom: 1px solid #e2e8f0;
+  backdrop-filter: blur(8px);
 }
 .header-left {
   display: flex;
